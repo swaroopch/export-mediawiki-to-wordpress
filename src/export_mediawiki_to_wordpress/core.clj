@@ -69,12 +69,16 @@ http://www.swaroopch.org/notes/Special:AllPages"
 
 (defn dump-pages-list
   [filename]
-  (spit filename (pr-str (index-pages-to-names mediawiki-index-pages))))
+  (spit filename
+        (pr-str (index-pages-to-names mediawiki-index-pages))))
 
 
 (defn process-pages-list
   [filename]
-  (map post-to-wordpress (filter :keep (read-string (slurp filename)))))
+  (let [pages (filter :keep
+                      (read-string (slurp filename)))]
+    (doseq [page pages]
+      (post-to-wordpress page))))
 
 
 (defn -main
