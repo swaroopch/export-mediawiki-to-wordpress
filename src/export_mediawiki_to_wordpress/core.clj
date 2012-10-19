@@ -68,7 +68,7 @@ http://www.swaroopch.org/notes/Special:AllPages"
 
 (defn post-to-wordpress
   [{:keys [title href]}]
-  (let [path (last (string/split href #"/"))
+  (let [path (string/replace (last (string/split href #"/")) ":" "-")
         content (pick-content (fetch-page (absolute-path href)))
         new-post-id (wp/new-page title path content)
         new-post-path (:post_name (wp/get-page new-post-id))]
