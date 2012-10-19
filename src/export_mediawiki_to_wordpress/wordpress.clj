@@ -58,3 +58,8 @@
    wordpress-username
    wordpress-password
    post-id))
+
+
+(defn verify-parent-page-exists
+  []
+  (assert (nil? (:fault-string (get-page parent-page-id)))))

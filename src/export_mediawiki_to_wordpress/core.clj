@@ -54,12 +54,13 @@ http://www.swaroopch.org/notes/Special:AllPages"
 
 (defn absolute-path
   [path]
+  (assert (.startsWith path "/"))
   (str mediawiki-base-url path))
 
 
 (defn post-to-wordpress
   [{:keys [title href]}]
-  (log/debug "Started posting to wordpress")
+  (log/debug "Sending page" title "to Wordpress")
   (let [path (last (string/split href #"/"))
         content (pick-content (fetch-page (absolute-path href)))
         new-post-id (wp/new-page title path content)
@@ -78,6 +79,7 @@ http://www.swaroopch.org/notes/Special:AllPages"
 
 (defn process-pages-list
   [filename]
+  (wp/verify-parent-page-exists)
   (let [pages (filter :keep
                       (read-string (slurp filename)))]
     (doseq [page pages]
