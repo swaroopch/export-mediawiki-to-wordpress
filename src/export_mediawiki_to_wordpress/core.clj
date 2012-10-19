@@ -1,8 +1,9 @@
 (ns export-mediawiki-to-wordpress.core
-  (:require [timbre.core :as log]
+  (:require [clojure.pprint :as pprint]
+            [timbre.core :as log]
             [net.cgrand.enlive-html :as html]
             [clojure.string :as string]
-            [export-mediawiki-to-wordpress.wordpress :as wordpress]))
+            [export-mediawiki-to-wordpress.wordpress :as wp]))
 
 
 (def ^:const mediawiki-base-url
@@ -61,8 +62,8 @@ http://www.swaroopch.org/notes/Special:AllPages"
   (log/debug "Started posting to wordpress")
   (let [path (last (string/split href #"/"))
         content (pick-content (fetch-page (absolute-path href)))
-        new-post-id (wordpress/new-page title path content)
-        new-post-path (:post_name (wordpress/get-page new-post-id))]
+        new-post-id (wp/new-page title path content)
+        new-post-path (:post_name (wp/get-page new-post-id))]
     (log/info "Saving" href "of size" (count content) "as" new-post-path)
     new-post-id))
 
@@ -70,7 +71,9 @@ http://www.swaroopch.org/notes/Special:AllPages"
 (defn dump-pages-list
   [filename]
   (spit filename
-        (pr-str (index-pages-to-names mediawiki-index-pages))))
+        (with-out-str
+          (pprint/pprint
+           (index-pages-to-names mediawiki-index-pages)))))
 
 
 (defn process-pages-list
