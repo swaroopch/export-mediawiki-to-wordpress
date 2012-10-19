@@ -47,9 +47,18 @@ http://www.swaroopch.org/notes/Special:AllPages"
 
 (defn pick-content
   [content]
-  (sanitize-html (enlive-to-html (html/at (html/select content [:div#bookname])
-                                          [:div.printfooter] nil
-                                          [:p#bottom-notice] nil))))
+  (sanitize-html
+   (enlive-to-html
+    (html/at
+     (html/select content [:div#bookname])
+     [:h1.firstHeading] nil
+     [:h3#siteSub] nil
+     [:div#contentSub] nil
+     [:div#jump-to-nav] nil
+     [:div#catlinks] nil
+     [:div.printfooter] nil
+     [:p#bottom-notice] nil
+     [html/comment-node] nil))))
 
 
 (defn absolute-path
@@ -60,7 +69,6 @@ http://www.swaroopch.org/notes/Special:AllPages"
 
 (defn post-to-wordpress
   [{:keys [title href]}]
-  (log/debug "Sending page" title "to Wordpress")
   (let [path (last (string/split href #"/"))
         content (pick-content (fetch-page (absolute-path href)))
         new-post-id (wp/new-page title path content)
