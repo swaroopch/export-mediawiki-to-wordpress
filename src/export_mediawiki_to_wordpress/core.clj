@@ -1,6 +1,5 @@
 (ns export-mediawiki-to-wordpress.core
   (:require [clojure.pprint :as pprint]
-            [timbre.core :as log]
             [net.cgrand.enlive-html :as html]
             [clojure.string :as string]
             [export-mediawiki-to-wordpress.wordpress :as wp]))
@@ -73,7 +72,9 @@ http://www.swaroopch.org/notes/Special:AllPages"
         content (pick-content (fetch-page (absolute-path href)))
         new-post-id (wp/new-page title path content)
         new-post-path (:post_name (wp/get-page new-post-id))]
-    (log/info "Saving" href "of size" (count content) "as" new-post-path)
+    (println "Saving" (str mediawiki-base-url href)
+             "of size" (count content)
+             "as" (str wp/wordpress-base-url new-post-path))
     new-post-id))
 
 

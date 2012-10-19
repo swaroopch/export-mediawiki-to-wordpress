@@ -1,11 +1,15 @@
 (ns export-mediawiki-to-wordpress.wordpress
-  (:require [timbre.core :as log]
-            [necessary-evil.core :as xmlrpc]))
+  (:require [necessary-evil.core :as xmlrpc]))
 
 
 (def wordpress-rpc-url
   "https://codex.wordpress.org/XML-RPC_Support"
   (System/getenv "WORDPRESS_RPC_URL"))
+
+
+(def wordpress-base-url
+  "e.g. http://www.swaroopch.com/notes"
+  (System/getenv "WORDPRESS_BASE_URL"))
 
 
 (def wordpress-blog-id
